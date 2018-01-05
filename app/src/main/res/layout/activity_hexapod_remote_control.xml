@@ -1,0 +1,198 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context="fr.stephane.hexapodvorpalremote.HexapodRemoteControl">
+
+    <TableLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/tableDir"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#0099cc"
+        android:gravity="center"
+        tools:context="fr.stephane.hexapodvorpalremote.HexapodRemoteControl">
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/button_up"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/up_icon" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/button_left"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/left_icon" />
+
+            <Button
+                android:id="@+id/button_middle"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/honk_icon" />
+
+            <Button
+                android:id="@+id/button_right"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/right_icon" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/button_down"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/down_icon" />
+
+        </TableRow>
+        <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+        <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+    </TableLayout>
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#0099cc"
+        android:gravity="center"
+        tools:context="fr.stephane.hexapodvorpalremote.HexapodRemoteControl">
+
+        <TableRow
+            android:id="@+id/table1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/walk_1"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/w1" />
+
+            <Button
+                android:id="@+id/walk_2"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/w2" />
+
+            <Button
+                android:id="@+id/walk_3"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/w3" />
+
+            <Button
+                android:id="@+id/walk_4"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/w4" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/table2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/danse_1"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/d1" />
+
+            <Button
+                android:id="@+id/danse_2"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/d2" />
+
+            <Button
+                android:id="@+id/danse_3"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/d3" />
+
+            <Button
+                android:id="@+id/danse_4"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/d4" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/table3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/fight_1"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/f1" />
+
+            <Button
+                android:id="@+id/fight_2"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/f2" />
+
+            <Button
+                android:id="@+id/fight_3"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/f3" />
+
+            <Button
+                android:id="@+id/fight_4"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/f4" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/table4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/record_1"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/r1" />
+
+            <Button
+                android:id="@+id/record_2"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/r2" />
+
+            <Button
+                android:id="@+id/record_3"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/r3" />
+
+            <Button
+                android:id="@+id/record_4"
+                style="?android:attr/borderlessButtonStyle"
+                android:text="@string/r4" />
+
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

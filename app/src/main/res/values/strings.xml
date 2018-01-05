@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">HexapodVorpalRemote</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dummy_content2">DUMMY\nCONTENT2</string>
+    <string name="up_icon">&#xf077;</string>
+    <string name="down_icon">&#xf078;</string>
+    <string name="left_icon">&#xf053;</string>
+    <string name="right_icon">&#xf054;</string>
+    <string name="honk_icon">&#xf1d0;</string>
+    <string name="w1">W1</string>
+    <string name="w2">W2</string>
+    <string name="w3">W3</string>
+    <string name="w4">W4</string>
+    <string name="d4">d4</string>
+    <string name="d3">d3</string>
+    <string name="d2">d2</string>
+    <string name="d1">d1</string>
+    <string name="f1">f1</string>
+    <string name="f2">f2</string>
+    <string name="f3">f3</string>
+    <string name="f4">f4</string>
+    <string name="r1">r1</string>
+    <string name="r2">r2</string>
+    <string name="r3">r3</string>
+    <string name="r4">r4</string>
+
+</resources>
