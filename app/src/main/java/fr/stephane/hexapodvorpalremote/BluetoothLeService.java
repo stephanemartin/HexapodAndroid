@@ -279,6 +279,14 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt.readCharacteristic(characteristic);
     }
 
+    public boolean writeCharacteristic(BluetoothGattCharacteristic characteristic) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return false;
+        }
+        return mBluetoothGatt.writeCharacteristic(characteristic);
+    }
+
     /**
      * Enables or disables notification on a give characteristic.
      *
@@ -314,21 +322,4 @@ public class BluetoothLeService extends Service {
         return mBluetoothGatt.getServices();
     }
 
-    CharacteristicBle getCharacteristic(final UUID serviceUUID, final UUID characteristicUUID){
-        return new CharacteristicBle(serviceUUID,characteristicUUID);
-    }
-
-    public class CharacteristicBle {
-        private final BluetoothGattService bleService;
-        private final BluetoothGattCharacteristic bleCharacteristic;
-
-        public CharacteristicBle(final UUID serviceUUID, final UUID characteristicUUID) {
-            bleService = mBluetoothGatt.getService(serviceUUID);
-            bleCharacteristic = bleService.getCharacteristic(characteristicUUID);
-        }
-
-        public void writeCharacteristicValue(final String str) {
-            bleCharacteristic.setValue(str);
-        }
-    }
 }

@@ -21,10 +21,12 @@
     <string name="f2">F2</string>
     <string name="f3">F3</string>
     <string name="f4">F4</string>
-    <string name="r1">R1</string>
-    <string name="r2">R2</string>
-    <string name="r3">R3</string>
-    <string name="r4">R4</string>
+    <string name="r1">ADJ</string>
+    <string name="r2">STA</string>
+    <string name="r3">TST</string>
+    <string name="r4">DEM</string>
+    <string name="r5">STOP</string>
+
     <string name="connection">Blutooth</string>
     <string name="unknown_device">Unknown Device</string>
     <string name="ble_not_supported">BLE not supported</string>

@@ -1,6 +1,8 @@
 package fr.stephane.hexapodvorpalremote;
 
 import android.app.ActionBar;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -56,7 +59,8 @@ public class HexapodRemoteControl extends AppCompatActivity {
 
     private String cmdPrefix = "W1";
     private Button lastMod = null;
-    private BluetoothLeService.CharacteristicBle bleCharacteristic = null;
+    private BluetoothGattCharacteristic bleGattCharacteristic = null;
+    private boolean modCmd = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,9 +101,31 @@ public class HexapodRemoteControl extends AppCompatActivity {
         // are available.
         //delayedHide(100);
 
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if (mBluetoothLeService != null) {
+            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+            Log.d(TAG, "Connect request result=" + result);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mGattUpdateReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mServiceConnection);
+        mBluetoothLeService = null;
+    }
+
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -136,30 +162,75 @@ public class HexapodRemoteControl extends AppCompatActivity {
         }
         return "s";
     }
+    private void getCharacteristic(){
+        if (mBluetoothLeService != null) {
+            if (bleGattCharacteristic == null) {
+                List<BluetoothGattService> supportedGattServices = mBluetoothLeService.getSupportedGattServices();
+                for (BluetoothGattService service : supportedGattServices) {
+                    Log.i(TAG, service.getUuid().toString());
+                    if (UUID_HEXAPOD_SERVICE.equals(service.getUuid())) {
+                        for (BluetoothGattCharacteristic bluetoothGattCharacteristic : service.getCharacteristics()) {
+                            Log.i(TAG, ">>" + bluetoothGattCharacteristic.getUuid());
+                            if (UUID_HEXAPOD_CHARACTERISTIC.equals(bluetoothGattCharacteristic.getUuid())) {
+                                Log.i(TAG, "found!");
+                                bleGattCharacteristic = bluetoothGattCharacteristic;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public void onMoveBtnClick(View v) {
         final String cmd = cmdPrefix + computeCmd(v.getId());
-        if(mBluetoothLeService==null){
+        if (mBluetoothLeService == null) {
             Toast.makeText(this, "not connected " + cmd, Toast.LENGTH_LONG).show();
             return;
         }
 
-        Toast.makeText(this, "Clicked on Button " + cmd, Toast.LENGTH_LONG).show();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (bleCharacteristic == null) {
-                    bleCharacteristic = mBluetoothLeService.getCharacteristic(
-                            UUID_HEXAPOD_SERVICE,
-                            UUID_HEXAPOD_CHARACTERISTIC
-                    );
-                }
-                bleCharacteristic.writeCharacteristicValue(cmd);
-            }
-        }).start();
+       // Toast.makeText(this, "Clicked on Button " + cmd, Toast.LENGTH_LONG).show();
+        getCharacteristic();
+        if (bleGattCharacteristic != null) {
+            bleGattCharacteristic.setValue(cmd);
+            mBluetoothLeService.writeCharacteristic(bleGattCharacteristic);
+            //Toast.makeText(this, "sent " + cmd, Toast.LENGTH_LONG).show();
+        }
+    }
+    String convertMetaMod(int id){
+        switch(id){
+            case R.id.record_1:
+                return "M2";
+            case R.id.record_2:
+                return "M1";
+            case R.id.record_3:
+                return "M5";
+            case R.id.record_4:
+                return "M3";
+            case R.id.record_5:
+                return "M0";
+        }
+        return null;
     }
 
+    public void onMetaModBtnClick(View v) {
+        if (mBluetoothLeService == null) {
+            Toast.makeText(this, "not connected ", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String cmd = convertMetaMod(v.getId());
+        modCmd = false;
+        cmdPrefix = "W1";
+        if (lastMod != null) {
+            lastMod.setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        getCharacteristic();
+        if (bleGattCharacteristic != null) {
+            bleGattCharacteristic.setValue(cmd);
+            mBluetoothLeService.writeCharacteristic(bleGattCharacteristic);
+        }
+    }
     public void onModBtnClick(View v) {
         Button button = findViewById(v.getId());
         if (lastMod != null) {
@@ -168,7 +239,6 @@ public class HexapodRemoteControl extends AppCompatActivity {
         lastMod = button;
         button.setBackgroundColor(Color.BLUE);
         cmdPrefix = button.getText().toString();
-        //Toast.makeText(this, "Mod " + button.getText(), Toast.LENGTH_LONG).show();
     }
 
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
@@ -190,7 +260,7 @@ public class HexapodRemoteControl extends AppCompatActivity {
                 clearUI();*/
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
-              //  displayGattServices(mBluetoothLeService.getSupportedGattServices());
+                //  displayGattServices(mBluetoothLeService.getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 //displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             }

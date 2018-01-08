@@ -139,7 +139,7 @@ public class DeviceScanActivity extends ListActivity {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null)
             return;
-        //TOTO: here
+
         final Intent intent = new Intent(this, HexapodRemoteControl.class);
         intent.putExtra(HexapodRemoteControl.EXTRAS_DEVICE_NAME, device.getName());
         intent.putExtra(HexapodRemoteControl.EXTRAS_DEVICE_ADDRESS, device.getAddress());

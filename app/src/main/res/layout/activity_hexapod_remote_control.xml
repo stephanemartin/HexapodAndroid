@@ -5,8 +5,7 @@
     android:background="#0099cc"
     tools:context="fr.stephane.hexapodvorpalremote.HexapodRemoteControl">
 
-    <TableLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/tableDir"
         android:layout_width="wrap_content"
@@ -96,26 +95,26 @@
 
             <Button
                 android:id="@+id/walk_1"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/w1" />
 
             <Button
                 android:id="@+id/walk_2"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/w2" />
 
             <Button
                 android:id="@+id/walk_3"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/w3" />
 
             <Button
                 android:id="@+id/walk_4"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/w4" />
 
         </TableRow>
@@ -128,26 +127,26 @@
 
             <Button
                 android:id="@+id/danse_1"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/d1" />
 
             <Button
                 android:id="@+id/danse_2"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/d2" />
 
             <Button
                 android:id="@+id/danse_3"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/d3" />
 
             <Button
                 android:id="@+id/danse_4"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/d4" />
 
         </TableRow>
@@ -166,55 +165,72 @@
 
             <Button
                 android:id="@+id/fight_2"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/f2" />
 
             <Button
                 android:id="@+id/fight_3"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/f3" />
 
             <Button
                 android:id="@+id/fight_4"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/f4" />
 
         </TableRow>
 
         <TableRow
             android:id="@+id/table4"
-            android:onClick="onModBtnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dip">
 
-            <Button
-                android:id="@+id/record_1"
-                android:onClick="onModBtnClick"
-                style="?android:attr/borderlessButtonStyle"
-                android:text="@string/r1" />
 
-            <Button
-                android:id="@+id/record_2"
-                android:onClick="onModBtnClick"
-                style="?android:attr/borderlessButtonStyle"
-                android:text="@string/r2" />
+                <Button
+                    android:id="@+id/record_1"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:onClick="onMetaModBtnClick"
+                    android:text="@string/r1" />
 
-            <Button
-                android:id="@+id/record_3"
-                android:onClick="onModBtnClick"
-                style="?android:attr/borderlessButtonStyle"
-                android:text="@string/r3" />
 
+                <Button
+                    android:id="@+id/record_2"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:onClick="onMetaModBtnClick"
+                    android:text="@string/r2" />
+
+                <Button
+                    android:id="@+id/record_3"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:onClick="onMetaModBtnClick"
+                    android:text="@string/r3" />
             <Button
                 android:id="@+id/record_4"
-                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onMetaModBtnClick"
                 android:text="@string/r4" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/table5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+
+
+            <Button
+                android:id="@+id/record_5"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_span="4"
+                android:onClick="onMetaModBtnClick"
+                android:text="@string/r5" />
 
         </TableRow>
     </TableLayout>
+
 </LinearLayout>
