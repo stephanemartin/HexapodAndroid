@@ -1,32 +1,35 @@
 package fr.stephane.hexapodvorpalremote;
 
-import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
+import android.app.ActionBar;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.app.ActionBar;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import java.util.Set;
+import java.util.UUID;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class HexapodRemoteControl extends AppCompatActivity {
-    private final static int REQUEST_CODE_ENABLE_BLUETOOTH = 0;
+    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
 
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
+    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     /**
      * list of button id for font awesome
      */
@@ -38,69 +41,29 @@ public class HexapodRemoteControl extends AppCompatActivity {
             R.id.button_middle
     };
 
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private final static String TAG = HexapodRemoteControl.class.getSimpleName();
 
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler();
-    private View mContentView;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
 
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
-    private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
-    private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
+    public final static UUID UUID_HEXAPOD_SERVICE =
+            UUID.fromString("d126db57-3b24-4077-bf38-759927bacc54");
+    public final static UUID UUID_HEXAPOD_CHARACTERISTIC =
+            UUID.fromString("03cd0bcf-5c00-49eb-9d2a-d7ed2791d762");
+
+    private String mDeviceName;
+    private String mDeviceAddress;
+
+    private BluetoothLeService mBluetoothLeService;
+
+    private String cmdPrefix = "W1";
+    private Button lastMod = null;
+    private BluetoothLeService.CharacteristicBle bleCharacteristic = null;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,99 +71,150 @@ public class HexapodRemoteControl extends AppCompatActivity {
 
         setContentView(R.layout.activity_hexapod_remote_control);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
-        for(int id:FONT_AWESOME_BUTTON_ID) {
+        for (int id : FONT_AWESOME_BUTTON_ID) {
             Button button = findViewById(id);
             button.setTypeface(typeface);
         }
-       // mVisible = true;
-        /*mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
-*/
 
-        // Set up the user interaction to manually show or hide the system UI.
-        /*mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });*/
+        final Intent intent = getIntent();
+        mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
+        mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(mDeviceName);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
         //delayedHide(100);
+
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != REQUEST_CODE_ENABLE_BLUETOOTH)
+
+    // Code to manage Service lifecycle.
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            if (!mBluetoothLeService.initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
+                finish();
+            }
+            // Automatically connects to the device upon successful start-up initialization.
+            mBluetoothLeService.connect(mDeviceAddress);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+        }
+    };
+
+    private String computeCmd(final int id) {
+        switch (id) {
+            case R.id.button_up:
+                return "f";
+            case R.id.button_down:
+                return "b";
+            case R.id.button_middle:
+                return "w";
+            case R.id.button_left:
+                return "l";
+            case R.id.button_right:
+                return "r";
+        }
+        return "s";
+    }
+
+    public void onMoveBtnClick(View v) {
+        final String cmd = cmdPrefix + computeCmd(v.getId());
+        if(mBluetoothLeService==null){
+            Toast.makeText(this, "not connected " + cmd, Toast.LENGTH_LONG).show();
             return;
-        if (resultCode == RESULT_OK) {
-            // L'utilisation a activé le bluetooth
-        } else {
-            // L'utilisation n'a pas activé le bluetooth
         }
+
+        Toast.makeText(this, "Clicked on Button " + cmd, Toast.LENGTH_LONG).show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (bleCharacteristic == null) {
+                    bleCharacteristic = mBluetoothLeService.getCharacteristic(
+                            UUID_HEXAPOD_SERVICE,
+                            UUID_HEXAPOD_CHARACTERISTIC
+                    );
+                }
+                bleCharacteristic.writeCharacteristicValue(cmd);
+            }
+        }).start();
     }
 
-    /*private void connectBluetooth(){
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled()) {
-           /* Intent enableBlueTooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBlueTooth, REQUEST_CODE_ENABLE_BLUETOOTH);*//*
-           bluetoothAdapter.enable();
+    public void onModBtnClick(View v) {
+        Button button = findViewById(v.getId());
+        if (lastMod != null) {
+            lastMod.setBackgroundColor(Color.TRANSPARENT);
         }
-        Set<BluetoothDevice> devices;
-        bluetoothAdapter.getde
-        devices = bluetoothAdapter.getBondedDevices();
-        for (BluetoothDevice blueDevice : devices) {
-            Toast.makeText(TutoBluetoothActivity.this, "Device = " + blueDevice.getName(), Toast.LENGTH_SHORT).show();
-        }*/
-
-    //}
-
-
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        mControlsView.setVisibility(View.GONE);
-        mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
+        lastMod = button;
+        button.setBackgroundColor(Color.BLUE);
+        cmdPrefix = button.getText().toString();
+        //Toast.makeText(this, "Mod " + button.getText(), Toast.LENGTH_LONG).show();
     }
 
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                Toast.makeText(HexapodRemoteControl.this, "connected ", Toast.LENGTH_LONG).show();
 
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+/*                mConnected = true;
+                updateConnectionState(R.string.connected);
+                invalidateOptionsMenu();*/
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                Toast.makeText(HexapodRemoteControl.this, "disconnected ", Toast.LENGTH_LONG).show();
+
+               /* mConnected = false;
+                updateConnectionState(R.string.disconnected);
+                invalidateOptionsMenu();
+                clearUI();*/
+            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+                // Show all the supported services and characteristics on the user interface.
+              //  displayGattServices(mBluetoothLeService.getSupportedGattServices());
+            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+                //displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+            }
+        }
+    };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.connection:
+                Toast.makeText(this, "bt ", Toast.LENGTH_LONG).show();
+
+                break;
+        }
+
+        return true;
     }
 
-    /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
     }
 }

@@ -13,17 +13,25 @@
     <string name="w2">W2</string>
     <string name="w3">W3</string>
     <string name="w4">W4</string>
-    <string name="d4">d4</string>
-    <string name="d3">d3</string>
-    <string name="d2">d2</string>
-    <string name="d1">d1</string>
-    <string name="f1">f1</string>
-    <string name="f2">f2</string>
-    <string name="f3">f3</string>
-    <string name="f4">f4</string>
-    <string name="r1">r1</string>
-    <string name="r2">r2</string>
-    <string name="r3">r3</string>
-    <string name="r4">r4</string>
+    <string name="d4">D4</string>
+    <string name="d3">D3</string>
+    <string name="d2">D2</string>
+    <string name="d1">D1</string>
+    <string name="f1">F1</string>
+    <string name="f2">F2</string>
+    <string name="f3">F3</string>
+    <string name="f4">F4</string>
+    <string name="r1">R1</string>
+    <string name="r2">R2</string>
+    <string name="r3">R3</string>
+    <string name="r4">R4</string>
+    <string name="connection">Blutooth</string>
+    <string name="unknown_device">Unknown Device</string>
+    <string name="ble_not_supported">BLE not supported</string>
+    <string name="error_bluetooth_not_supported">No supported</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_stop">Stop</string>
+    <string name="title_devices">Choose Hexapod</string>
+    <string name="refresh">Refresh</string>
 
 </resources>

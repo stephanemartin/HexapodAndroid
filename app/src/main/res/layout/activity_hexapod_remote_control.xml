@@ -25,6 +25,7 @@
             <Button
                 android:id="@+id/button_up"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onMoveBtnClick"
                 android:text="@string/up_icon" />
 
         </TableRow>
@@ -39,16 +40,19 @@
             <Button
                 android:id="@+id/button_left"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onMoveBtnClick"
                 android:text="@string/left_icon" />
 
             <Button
                 android:id="@+id/button_middle"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onMoveBtnClick"
                 android:text="@string/honk_icon" />
 
             <Button
                 android:id="@+id/button_right"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onMoveBtnClick"
                 android:text="@string/right_icon" />
 
         </TableRow>
@@ -63,6 +67,7 @@
             <Button
                 android:id="@+id/button_down"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onMoveBtnClick"
                 android:text="@string/down_icon" />
 
         </TableRow>
@@ -91,21 +96,25 @@
 
             <Button
                 android:id="@+id/walk_1"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/w1" />
 
             <Button
                 android:id="@+id/walk_2"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/w2" />
 
             <Button
                 android:id="@+id/walk_3"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/w3" />
 
             <Button
                 android:id="@+id/walk_4"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/w4" />
 
@@ -119,21 +128,25 @@
 
             <Button
                 android:id="@+id/danse_1"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/d1" />
 
             <Button
                 android:id="@+id/danse_2"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/d2" />
 
             <Button
                 android:id="@+id/danse_3"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/d3" />
 
             <Button
                 android:id="@+id/danse_4"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/d4" />
 
@@ -148,20 +161,24 @@
             <Button
                 android:id="@+id/fight_1"
                 style="?android:attr/borderlessButtonStyle"
+                android:onClick="onModBtnClick"
                 android:text="@string/f1" />
 
             <Button
                 android:id="@+id/fight_2"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/f2" />
 
             <Button
                 android:id="@+id/fight_3"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/f3" />
 
             <Button
                 android:id="@+id/fight_4"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/f4" />
 
@@ -169,27 +186,32 @@
 
         <TableRow
             android:id="@+id/table4"
+            android:onClick="onModBtnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dip">
 
             <Button
                 android:id="@+id/record_1"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/r1" />
 
             <Button
                 android:id="@+id/record_2"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/r2" />
 
             <Button
                 android:id="@+id/record_3"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/r3" />
 
             <Button
                 android:id="@+id/record_4"
+                android:onClick="onModBtnClick"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="@string/r4" />
 
