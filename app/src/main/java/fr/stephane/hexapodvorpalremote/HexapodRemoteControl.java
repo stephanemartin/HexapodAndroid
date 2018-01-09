@@ -60,7 +60,6 @@ public class HexapodRemoteControl extends AppCompatActivity {
     private String cmdPrefix = "W1";
     private Button lastMod = null;
     private BluetoothGattCharacteristic bleGattCharacteristic = null;
-    private boolean modCmd = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -219,7 +218,6 @@ public class HexapodRemoteControl extends AppCompatActivity {
             return;
         }
         String cmd = convertMetaMod(v.getId());
-        modCmd = false;
         cmdPrefix = "W1";
         if (lastMod != null) {
             lastMod.setBackgroundColor(Color.TRANSPARENT);
