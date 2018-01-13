@@ -60,6 +60,7 @@ public class HexapodRemoteControl extends AppCompatActivity {
     private String cmdPrefix = "W1";
     private Button lastMod = null;
     private BluetoothGattCharacteristic bleGattCharacteristic = null;
+    private boolean isMetaMode = true;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,7 +162,8 @@ public class HexapodRemoteControl extends AppCompatActivity {
         }
         return "s";
     }
-    private void getCharacteristic(){
+
+    private void getCharacteristic() {
         if (mBluetoothLeService != null) {
             if (bleGattCharacteristic == null) {
                 List<BluetoothGattService> supportedGattServices = mBluetoothLeService.getSupportedGattServices();
@@ -187,8 +189,9 @@ public class HexapodRemoteControl extends AppCompatActivity {
             Toast.makeText(this, "not connected " + cmd, Toast.LENGTH_LONG).show();
             return;
         }
+        isMetaMode = false;
 
-       // Toast.makeText(this, "Clicked on Button " + cmd, Toast.LENGTH_LONG).show();
+        // Toast.makeText(this, "Clicked on Button " + cmd, Toast.LENGTH_LONG).show();
         getCharacteristic();
         if (bleGattCharacteristic != null) {
             bleGattCharacteristic.setValue(cmd);
@@ -196,8 +199,9 @@ public class HexapodRemoteControl extends AppCompatActivity {
             //Toast.makeText(this, "sent " + cmd, Toast.LENGTH_LONG).show();
         }
     }
-    String convertMetaMod(int id){
-        switch(id){
+
+    String convertMetaMod(int id) {
+        switch (id) {
             case R.id.record_1:
                 return "M2";
             case R.id.record_2:
@@ -217,6 +221,7 @@ public class HexapodRemoteControl extends AppCompatActivity {
             Toast.makeText(this, "not connected ", Toast.LENGTH_LONG).show();
             return;
         }
+        isMetaMode = true;
         String cmd = convertMetaMod(v.getId());
         cmdPrefix = "W1";
         if (lastMod != null) {
@@ -229,6 +234,7 @@ public class HexapodRemoteControl extends AppCompatActivity {
             mBluetoothLeService.writeCharacteristic(bleGattCharacteristic);
         }
     }
+
     public void onModBtnClick(View v) {
         Button button = findViewById(v.getId());
         if (lastMod != null) {
@@ -237,6 +243,20 @@ public class HexapodRemoteControl extends AppCompatActivity {
         lastMod = button;
         button.setBackgroundColor(Color.BLUE);
         cmdPrefix = button.getText().toString();
+    }
+
+    public void onStopMotionBtnClick(View v) {
+        if (mBluetoothLeService == null) {
+            Toast.makeText(this, "not connected ", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String cmd = isMetaMode ? "M6" : cmdPrefix + "s";
+
+        getCharacteristic();
+        if (bleGattCharacteristic != null) {
+            bleGattCharacteristic.setValue(cmd);
+            mBluetoothLeService.writeCharacteristic(bleGattCharacteristic);
+        }
     }
 
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {

@@ -25,7 +25,8 @@
     <string name="r2">STA</string>
     <string name="r3">TST</string>
     <string name="r4">DEM</string>
-    <string name="r5">STOP</string>
+    <string name="r5">Dis Mot</string>
+    <string name="stop_motion">STOP</string>
 
     <string name="connection">Blutooth</string>
     <string name="unknown_device">Unknown Device</string>

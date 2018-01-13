@@ -226,9 +226,15 @@
             <Button
                 android:id="@+id/record_5"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_span="4"
+                android:layout_span="2"
                 android:onClick="onMetaModBtnClick"
                 android:text="@string/r5" />
+            <Button
+                android:id="@+id/stop_motion"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_span="2"
+                android:onClick="onStopMotionBtnClick"
+                android:text="@string/stop_motion" />
 
         </TableRow>
     </TableLayout>
