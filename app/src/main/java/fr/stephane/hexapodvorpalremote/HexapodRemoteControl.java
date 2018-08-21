@@ -175,6 +175,7 @@ public class HexapodRemoteControl extends AppCompatActivity {
                             if (UUID_HEXAPOD_CHARACTERISTIC.equals(bluetoothGattCharacteristic.getUuid())) {
                                 Log.i(TAG, "found!");
                                 bleGattCharacteristic = bluetoothGattCharacteristic;
+                                return;
                             }
                         }
                     }
@@ -223,10 +224,10 @@ public class HexapodRemoteControl extends AppCompatActivity {
         }
         isMetaMode = true;
         String cmd = convertMetaMod(v.getId());
-        cmdPrefix = "W1";
+        /*cmdPrefix = "W1";
         if (lastMod != null) {
             lastMod.setBackgroundColor(Color.TRANSPARENT);
-        }
+        }*/
 
         getCharacteristic();
         if (bleGattCharacteristic != null) {
@@ -265,7 +266,6 @@ public class HexapodRemoteControl extends AppCompatActivity {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 Toast.makeText(HexapodRemoteControl.this, "connected ", Toast.LENGTH_LONG).show();
-
 /*                mConnected = true;
                 updateConnectionState(R.string.connected);
                 invalidateOptionsMenu();*/
@@ -289,8 +289,9 @@ public class HexapodRemoteControl extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.connection:
-                Toast.makeText(this, "bt ", Toast.LENGTH_LONG).show();
-
+                if(mBluetoothLeService.getmConnectionState()==BluetoothLeService.STATE_DISCONNECTED){
+                    mBluetoothLeService.connect(mDeviceAddress);
+                }
                 break;
         }
 
